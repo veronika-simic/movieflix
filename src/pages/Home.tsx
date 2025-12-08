@@ -1,28 +1,31 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import MovieCard from "../components/MovieCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/Home.css";
+import { getPopularMovies } from "../services/api";
+import type { Movie } from "../types/type";
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const movies = [
-    {
-      id: 1,
-      title: "Home Alone",
-      releaseDate: 2021,
-      img: "",
-    },
-    {
-      id: 2,
-      title: "Home Alone 2",
-      releaseDate: 2022,
-      img: "",
-    },
-    {
-      id: 3,
-      title: "Home Alone 3",
-      releaseDate: 2023,
-      img: "",
-    },
-  ];
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const popularMovies = await getPopularMovies();
+        console.log(popularMovies);
+        setMovies(popularMovies);
+      } catch (e) {
+        console.log(e);
+        setError("Failed to load movies...");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPopularMovies();
+  }, []);
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSearchQuery("");

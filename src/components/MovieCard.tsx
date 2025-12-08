@@ -1,15 +1,7 @@
 import "../css/MovieCard.css";
+import type { Movie } from "../types/type";
 
-function MovieCard({
-  movie,
-}: {
-  movie: {
-    id: number;
-    title: string;
-    img: string;
-    releaseDate: number;
-  };
-}) {
+function MovieCard({ movie }: { movie: Movie }) {
   function onFavoriteClick() {
     alert("Hey you have clicked this button");
   }
@@ -17,7 +9,10 @@ function MovieCard({
   return (
     <div className="movie-card">
       <div className="movie-poster">
-        <img src={movie.img} alt={movie.title} />
+        <img
+          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          alt={movie.title}
+        />
         <div className="movie-overlay">
           <button className="favorite-btn" onClick={onFavoriteClick}>
             ♥
@@ -26,7 +21,7 @@ function MovieCard({
       </div>
       <div className="movie-info">
         <h3>{movie.title}</h3>
-        <p>{movie.releaseDate}</p>
+        <p>{movie.release_date}</p>
       </div>
     </div>
   );
