@@ -2,7 +2,7 @@
 import MovieCard from "../components/MovieCard";
 import { useState, useEffect } from "react";
 import "../css/Home.css";
-import { getPopularMovies } from "../services/api";
+import { getPopularMovies, searchMovies } from "../services/api";
 import type { Movie } from "../types/type";
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,9 +26,20 @@ function Home() {
     loadPopularMovies();
   }, []);
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSearchQuery("");
+    if (!searchQuery.trim()) return;
+    if (loading) return;
+    setLoading(true);
+    try {
+      const searchResults = await searchMovies(searchQuery);
+      setMovies(searchResults);
+    } catch (e) {
+      console.log(e);
+      setError("Failed to search movies...");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
